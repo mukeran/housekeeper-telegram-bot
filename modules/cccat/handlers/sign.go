@@ -36,8 +36,8 @@ func generateSignReport(accountID, got uint, err error) string {
 }
 
 type paramSign struct {
-	All       bool `json:"all,omitempty"`
-	AccountID uint `json:"accountID,omitempty"`
+	All bool `json:"all,omitempty"`
+	ID  uint `json:"id,omitempty"`
 }
 
 func Sign() CommandHandlerFunc {
@@ -79,7 +79,7 @@ func OnSignButtonClick() CallbackQueryHandlerFunc {
 			defer func(resp *tgbotapi.MessageConfig) {
 				QuickAnswerCallbackQueryWithAlert(bot, callbackQueryID, resp.Text)
 			}(&resp)
-			account, err := getAccountByIDWithSecurityCheck(params.AccountID, from.ID)
+			account, err := getAccountByIDWithSecurityCheck(params.ID, from.ID)
 			if err != nil {
 				resp.Text = getRespText(err)
 				return

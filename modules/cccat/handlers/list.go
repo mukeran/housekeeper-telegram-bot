@@ -87,7 +87,7 @@ func generateEditManage(chatID int64, messageID int, account *models.Account) (r
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Sign now",
 				cache.RecordCallback(CallbackCccatSign,
-					EncodeParam(paramSign{AccountID: account.ID}))),
+					EncodeParam(paramSign{ID: account.ID}))),
 			tgbotapi.NewInlineKeyboardButtonData("Toggle auto sign",
 				cache.RecordCallback(CallbackCccatManageToggleAutoSign,
 					EncodeParam(ParamID{ID: account.ID}))),
