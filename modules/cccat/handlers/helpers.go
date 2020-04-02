@@ -32,7 +32,7 @@ func generateAccountListInlineKeyboardButtons(fromID int, callback string) (butt
 					return fmt.Sprintf("%v | %v", account.ID, account.Email)
 				}
 				return fmt.Sprintf("%v | %v", account.ID, account.CookieUID)
-			}(), cache.RecordCallback(callback, EncodeParam(ParamID{ID: account.ID})),
+			}(), cache.RecordCallback(callback, EncodeParam(paramSign{AccountID: account.ID})),
 		)))
 	}
 	return
