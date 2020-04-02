@@ -41,7 +41,7 @@ func generateSuccessfulAddKeyboard(account *models.Account) tgbotapi.InlineKeybo
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Sign now",
 				cache.RecordCallback(CallbackCccatSign,
-					EncodeParam(ParamID{ID: account.ID})),
+					EncodeParam(paramSign{AccountID: account.ID})),
 			),
 			tgbotapi.NewInlineKeyboardButtonData(func() string {
 				if account.AutoSign {
