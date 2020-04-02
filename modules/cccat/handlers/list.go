@@ -87,7 +87,7 @@ func generateEditManage(chatID int64, messageID int, account *models.Account) (r
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Sign now",
 				cache.RecordCallback(CallbackCccatSign,
-					EncodeParam(ParamID{ID: account.ID}))),
+					EncodeParam(paramSign{AccountID: account.ID}))),
 			tgbotapi.NewInlineKeyboardButtonData("Toggle auto sign",
 				cache.RecordCallback(CallbackCccatManageToggleAutoSign,
 					EncodeParam(ParamID{ID: account.ID}))),
@@ -177,14 +177,14 @@ func generateRemainingTransferMessage(accountID uint, remaining float64, err err
 func OnManageQueryRemainingTransferButtonClick() CallbackQueryHandlerFunc {
 	return func(bot *tgbotapi.BotAPI, lastMsg *tgbotapi.Message, from *tgbotapi.User,
 		callbackQueryID string, param string) {
-		var params paramSign
+		var params ParamID
 		DecodeParam(param, &params)
 		resp := tgbotapi.NewMessage(lastMsg.Chat.ID, "")
 		defer MustSend(bot, &resp)
 		defer func(resp *tgbotapi.MessageConfig) {
 			QuickAnswerCallbackQueryWithAlert(bot, callbackQueryID, resp.Text)
 		}(&resp)
-		account, err := getAccountByIDWithSecurityCheck(params.AccountID, from.ID)
+		account, err := getAccountByIDWithSecurityCheck(params.ID, from.ID)
 		if err != nil {
 			resp.Text = getRespText(err)
 			if err == errAccountNotFound {

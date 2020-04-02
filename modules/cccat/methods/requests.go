@@ -1,6 +1,7 @@
 package methods
 
 import (
+	. "HouseKeeperBot/common"
 	"HouseKeeperBot/database"
 	"HouseKeeperBot/modules/cccat/models"
 	"bytes"
@@ -157,12 +158,8 @@ func Sign(account *models.Account) (got uint, err error) {
 		}
 		tx := database.Db.Begin()
 		defer tx.RollbackUnlessCommitted()
-		if v := tx.Create(&signLog); v.Error != nil {
-			log.Panic(v.Error)
-		}
-		if v := tx.Commit(); v.Error != nil {
-			log.Panic(v.Error)
-		}
+		DatabasePanicError(tx.Create(&signLog))
+		DatabasePanicError(tx.Commit())
 	}(account.ID, result.Msg, &got, &err)
 	if regexpSigned.MatchString(result.Msg) {
 		return 0, ErrSigned
