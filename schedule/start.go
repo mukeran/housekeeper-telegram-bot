@@ -14,9 +14,9 @@ const (
 func Start(bot *tgbotapi.BotAPI) {
 	ticker := time.NewTicker(checkingDuration)
 	go func() {
-		now := time.Now()
 		for range ticker.C {
 			log.Printf("Start to execute schedule tasks")
+			now := time.Now()
 			for i, task := range taskList {
 				if !now.Before(task.NextTime) {
 					b := task.Func(bot, task.Param)
