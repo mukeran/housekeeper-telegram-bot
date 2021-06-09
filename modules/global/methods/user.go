@@ -44,7 +44,7 @@ func IsWhitelisted(telegramUserID int) bool {
 	var count uint
 	tx := database.Db
 	DatabasePanicError(tx.Table(models.TableUser).
-		Where("telegram_user_id = ? and is_whitelisted = 1", telegramUserID).Count(&count))
+		Where("telegram_user_id = ? and (is_whitelisted = 1 or is_admin = 1)", telegramUserID).Count(&count))
 	return count != 0
 }
 

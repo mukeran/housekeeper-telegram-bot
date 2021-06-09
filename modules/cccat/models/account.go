@@ -13,6 +13,7 @@ type Account struct {
 	CreatedAt           time.Time
 	UpdatedAt           time.Time
 	CookieUID           string
+	CookieUserAuth      string
 	CookieUserPwd       string
 	HasLoginCredentials bool
 	Email               string

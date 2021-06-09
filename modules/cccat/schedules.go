@@ -7,16 +7,17 @@ import (
 	"HouseKeeperBot/modules/cccat/models"
 	"HouseKeeperBot/schedule"
 	"fmt"
-	tgbotapi "github.com/mukeran/telegram-bot-api"
 	"log"
 	"time"
+
+	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
 
 const (
 	tplScheduledSignSucceeded        = `[Scheduled] Successfully signed account %v (%v). Got %v MB.`
 	tplScheduledSignSigned           = `[Scheduled] Account %v (%v) has been signed today.`
 	tplScheduledWrongEmailOrPassword = `[Scheduled] CCCAT reports "wrong email or password" for account %v (%v). Please check your settings.`
-	tplScheduledInvalidCookie        = `[Scheduled] Account %v (%v) has an invalid cookie.`
+	tplScheduledInvalidCookie        = `[Scheduled] Account %v (%v) has an invalid cookie. Go to cccat.io to re-login your account and update your user_auth using /cccat_update.`
 	tplScheduledSignFailed           = `[Scheduled] Failed to sign account %v (%v).`
 )
 
@@ -61,6 +62,6 @@ func scheduleSign() schedule.TaskFunc {
 func RegisterSchedules() {
 	now := time.Now()
 	schedule.RegisterDurationTask(scheduleSign(), "",
-		time.Date(now.Year(), now.Month(), now.Day(), 8, 30, 0, 0, now.Location()),
+		time.Date(now.Year(), now.Month(), now.Day(), 0, 30, 0, 0, time.UTC),
 		time.Hour*24)
 }

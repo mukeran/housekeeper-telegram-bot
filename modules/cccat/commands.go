@@ -7,9 +7,10 @@ import (
 
 func Commands() CommandHandlerMap {
 	return CommandHandlerMap{
-		CommandCccatSign: Sign(),
-		CommandCccatAdd:  Add(),
-		CommandCccatList: List(),
-		CommandCccatDel:  Del(),
+		CommandCccatSign:   Sign(),
+		CommandCccatAdd:    Add(),
+		CommandCccatUpdate: Update(),
+		CommandCccatList:   List(),
+		CommandCccatDel:    Del(),
 	}
 }

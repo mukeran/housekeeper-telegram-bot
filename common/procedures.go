@@ -1,8 +1,10 @@
 package common
 
 const (
-	ProcedureCccatAdd        = "cccatAdd"
-	ProcedureManageWhitelist = "manageWhitelist"
-	ProcedureManageBlacklist = "manageBlacklist"
-	ProcedureManageAddAdmin  = "manageAddAdmin"
+	ProcedureCccatAdd          = "cccatAdd"
+	ProcedureCccatUpdate       = "cccatUpdate"
+	ProcedureCccatManageUpdate = "cccatManageUpdate"
+	ProcedureManageWhitelist   = "manageWhitelist"
+	ProcedureManageBlacklist   = "manageBlacklist"
+	ProcedureManageAddAdmin    = "manageAddAdmin"
 )

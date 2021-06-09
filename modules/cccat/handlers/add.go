@@ -7,16 +7,18 @@ import (
 	"HouseKeeperBot/modules/cccat/methods"
 	"HouseKeeperBot/modules/cccat/models"
 	"fmt"
-	"github.com/mukeran/telegram-bot-api"
+
+	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
 
 const (
-	modeCredential          = "Using email and password"
+	modeCredential          = "Using email and password (deprecated)"
 	modeCookie              = "Using cookie"
 	stepSelectMode          = "selectMode"
 	stepInputEmail          = "inputEmail"
 	stepInputPassword       = "inputPassword"
 	stepInputCookieUid      = "inputCookieUid"
+	stepInputCookieUserAuth = "inputCookieUserAuth"
 	stepInputCookieUserPwd  = "inputCookieUserPwd"
 	tplSuccessAddCredential = `Successfully added account\!
 *ID*: %v
@@ -27,13 +29,15 @@ const (
 *ID*: %v
 *Mode*: Cookie
 *uid*: %v
+*user\_auth*: %v
 *user\_pwd*: %v`
 )
 
 type paramAdding struct {
-	Step      string `json:"step"`
-	Email     string `json:"username,omitempty"`
-	CookieUid string `json:"cookieUid,omitempty"`
+	Step           string `json:"step"`
+	Email          string `json:"username,omitempty"`
+	CookieUserAuth string `json:"cookieUserAuth,omitempty"`
+	CookieUid      string `json:"cookieUid,omitempty"`
 }
 
 func generateSuccessfulAddKeyboard(account *models.Account) tgbotapi.InlineKeyboardMarkup {
@@ -93,8 +97,11 @@ func ProcedureAdd() ProcedureHandlerFunc {
 			resp.ReplyMarkup = tgbotapi.NewRemoveKeyboard(false)
 			switch msg.Text {
 			case modeCredential:
-				resp.Text = "Please input your CCCAT account *email*:"
-				params.Step = stepInputEmail
+				resp.Text = "CCCAT has enabled hCaptcha which blocked bot to log in automatically. Please use Cookie mode instead."
+				cache.ClearProcedure(msg.Chat.ID, from.ID)
+				return
+				// resp.Text = "Please input your CCCAT account *email*:"
+				// params.Step = stepInputEmail
 			case modeCookie:
 				resp.Text = "Please input your active CCCAT session's Cookie *uid*:"
 				params.Step = stepInputCookieUid
@@ -108,9 +115,13 @@ func ProcedureAdd() ProcedureHandlerFunc {
 			params.Step = stepInputPassword
 			params.Email = msg.Text
 		case stepInputCookieUid:
+			resp.Text = "Please input your active CCCAT session's Cookie *user_auth*:"
+			params.Step = stepInputCookieUserAuth
+			params.CookieUid = msg.Text
+		case stepInputCookieUserAuth:
 			resp.Text = "Please input your active CCCAT session's Cookie *user_pwd*:"
 			params.Step = stepInputCookieUserPwd
-			params.CookieUid = msg.Text
+			params.CookieUserAuth = msg.Text
 		case stepInputPassword, stepInputCookieUserPwd:
 			var account models.Account
 			if params.Step == stepInputPassword {
@@ -121,8 +132,9 @@ func ProcedureAdd() ProcedureHandlerFunc {
 				}
 			} else {
 				account = models.Account{
-					CookieUID:     params.CookieUid,
-					CookieUserPwd: msg.Text,
+					CookieUID:      params.CookieUid,
+					CookieUserAuth: params.CookieUserAuth,
+					CookieUserPwd:  msg.Text,
 				}
 			}
 			account.AutoSign = true
@@ -137,7 +149,7 @@ func ProcedureAdd() ProcedureHandlerFunc {
 					account.ID, EscapeMarkdownV2(account.Email), EscapeMarkdownV2(account.Password))
 			} else {
 				resp.Text = fmt.Sprintf(tplSuccessAddCookie,
-					account.ID, EscapeMarkdownV2(account.CookieUID), EscapeMarkdownV2(account.CookieUserPwd))
+					account.ID, EscapeMarkdownV2(account.CookieUID), EscapeMarkdownV2(account.CookieUserAuth), EscapeMarkdownV2(account.CookieUserPwd))
 			}
 			resp.ParseMode = tgbotapi.ModeMarkdownV2
 			resp.ReplyMarkup = generateSuccessfulAddKeyboard(&account)

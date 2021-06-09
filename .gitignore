@@ -3,4 +3,9 @@
 /build/
 /db.sqlite3
 
+logs
+
 *.log
+
+HouseKeeperBot
+start.sh

@@ -7,6 +7,8 @@ import (
 
 func Procedures() ProcedureHandlerMap {
 	return ProcedureHandlerMap{
-		ProcedureCccatAdd: ProcedureAdd(),
+		ProcedureCccatAdd:          ProcedureAdd(),
+		ProcedureCccatUpdate:       ProcedureUpdate(),
+		ProcedureCccatManageUpdate: ProcedureManageUpdate(),
 	}
 }

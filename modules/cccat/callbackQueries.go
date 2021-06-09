@@ -8,6 +8,7 @@ import (
 func CallbackQueries() CallbackQueryHandlerMap {
 	return CallbackQueryHandlerMap{
 		CallbackCccatSign:                              OnSignButtonClick(),
+		CallbackCccatUpdate:                            OnUpdateButtonClick(),
 		CallbackCccatDel:                               OnDelButtonClick(),
 		CallbackCccatAddResultToggleAutoSign:           OnAutoSignToggle(),
 		CallbackCccatAddResultDelete:                   OnAddResultDeleteButtonClick(),
@@ -15,6 +16,7 @@ func CallbackQueries() CallbackQueryHandlerMap {
 		CallbackCccatManageToggleAutoSign:              OnManageToggleAutoSignButtonClick(),
 		CallbackCccatManageQueryRemainingTransfer:      OnManageQueryRemainingTransferButtonClick(),
 		CallbackCccatManageGetLastSuccessfulSignResult: OnManageGetLastSuccessfulSignResultButtonClick(),
+		CallbackCccatManageUpdate:                      OnManageUpdateClick(),
 		CallbackCccatManageDelete:                      OnManageDeleteClick(),
 		CallbackCccatManageBackToList:                  OnManageBackToListButtonClick(),
 	}

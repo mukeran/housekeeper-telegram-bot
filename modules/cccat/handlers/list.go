@@ -7,9 +7,10 @@ import (
 	"HouseKeeperBot/modules/cccat/methods"
 	"HouseKeeperBot/modules/cccat/models"
 	"fmt"
-	"github.com/jinzhu/gorm"
-	"github.com/mukeran/telegram-bot-api"
 	"log"
+
+	"github.com/jinzhu/gorm"
+	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
 
 const (
@@ -31,6 +32,11 @@ const (
 Time: %v
 Got transfer: %v MB`
 )
+
+type paramManageUpdating struct {
+	LastMsgID int
+	AccountID uint
+}
 
 func generateListMainMenu(chatID int64, fromID int) (resp tgbotapi.MessageConfig) {
 	resp = tgbotapi.NewMessage(chatID, "Please select an account to manage:")
@@ -101,9 +107,14 @@ func generateEditManage(chatID int64, messageID int, account *models.Account) (r
 					EncodeParam(ParamID{ID: account.ID}))),
 		),
 		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Update user_auth",
+				cache.RecordCallback(CallbackCccatManageUpdate,
+					EncodeParam(ParamID{ID: account.ID}))),
 			tgbotapi.NewInlineKeyboardButtonData("Delete",
 				cache.RecordCallback(CallbackCccatManageDelete,
 					EncodeParam(ParamID{ID: account.ID}))),
+		),
+		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("< Back to list",
 				cache.RecordCallback(CallbackCccatManageBackToList,
 					EncodeParam(ParamID{ID: account.ID}))),
@@ -228,6 +239,55 @@ func OnManageGetLastSuccessfulSignResultButtonClick() CallbackQueryHandlerFunc {
 		}
 		resp.Text = fmt.Sprintf(tplLastSuccessfulSignResult,
 			account.ID, stringifyTime(signLog.CreatedAt), signLog.GotTransfer)
+	}
+}
+
+func OnManageUpdateClick() CallbackQueryHandlerFunc {
+	return func(bot *tgbotapi.BotAPI, lastMsg *tgbotapi.Message, from *tgbotapi.User,
+		callbackQueryID string, param string) {
+		var params ParamID
+		DecodeParam(param, &params)
+		resp := tgbotapi.NewMessage(lastMsg.Chat.ID, "")
+		defer MustSend(bot, &resp)
+		defer func(resp *tgbotapi.MessageConfig) {
+			QuickAnswerCallbackQuery(bot, callbackQueryID, resp.Text)
+		}(&resp)
+		account, err := getAccountByIDWithSecurityCheck(params.ID, from.ID)
+		if err != nil {
+			resp.Text = getRespText(err)
+			if err == errAccountNotFound {
+				MustSend(bot, generateEditUpdateList(lastMsg.Chat.ID, lastMsg.MessageID, from.ID))
+			}
+			return
+		}
+		resp.Text = fmt.Sprintf(`Please input new Cookie user_auth for account %v:`, params.ID)
+		cache.RecordProcedure(lastMsg.Chat.ID, from.ID, ProcedureCccatManageUpdate, EncodeParam(paramManageUpdating{LastMsgID: lastMsg.MessageID, AccountID: account.ID}))
+	}
+}
+
+func ProcedureManageUpdate() ProcedureHandlerFunc {
+	return func(bot *tgbotapi.BotAPI, msg *tgbotapi.Message, from *tgbotapi.User, param string) {
+		var params paramManageUpdating
+		DecodeParam(param, &params)
+		resp := tgbotapi.NewMessage(msg.Chat.ID, "")
+		resp.ParseMode = tgbotapi.ModeMarkdown
+		defer MustSend(bot, &resp)
+		account, err := getAccountByIDWithSecurityCheck(params.AccountID, from.ID)
+		if err != nil {
+			resp.Text = getRespText(err)
+			if err == errAccountNotFound {
+				MustSend(bot, generateEditUpdateList(msg.Chat.ID, msg.MessageID, from.ID))
+			}
+			return
+		}
+		tx := database.Db.Begin()
+		defer tx.RollbackUnlessCommitted()
+		account.CookieUserAuth = msg.Text
+		DatabasePanicError(tx.Save(&account))
+		DatabasePanicError(tx.Commit())
+		resp.Text = fmt.Sprintf(tplUserAuthUpdated, params.AccountID, msg.Text)
+		cache.ClearProcedure(msg.Chat.ID, from.ID)
+		MustSend(bot, generateEditManage(msg.Chat.ID, params.LastMsgID, account))
 	}
 }
 

@@ -110,7 +110,7 @@ func getCookie(email, password string) (uid, userPwd string, err error) {
 }
 
 func Sign(account *models.Account) (got uint, err error) {
-	uid, userPwd := account.CookieUID, account.CookieUserPwd
+	uid, userAuth, userPwd := account.CookieUID, account.CookieUserAuth, account.CookieUserPwd
 	if account.HasLoginCredentials {
 		uid, userPwd, err = getCookie(account.Email, account.Password)
 		if err != nil {
@@ -122,6 +122,7 @@ func Sign(account *models.Account) (got uint, err error) {
 		return
 	}
 	req.AddCookie(&http.Cookie{Name: "uid", Value: uid})
+	req.AddCookie(&http.Cookie{Name: "user_auth", Value: userAuth})
 	req.AddCookie(&http.Cookie{Name: "user_pwd", Value: userPwd})
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -189,7 +190,7 @@ func Sign(account *models.Account) (got uint, err error) {
 }
 
 func QueryRemainingTransfer(account *models.Account) (remaining float64, err error) {
-	uid, userPwd := account.CookieUID, account.CookieUserPwd
+	uid, userAuth, userPwd := account.CookieUID, account.CookieUserAuth, account.CookieUserPwd
 	if account.HasLoginCredentials {
 		uid, userPwd, err = getCookie(account.Email, account.Password)
 		if err != nil {
@@ -201,6 +202,7 @@ func QueryRemainingTransfer(account *models.Account) (remaining float64, err err
 		return
 	}
 	req.AddCookie(&http.Cookie{Name: "uid", Value: uid})
+	req.AddCookie(&http.Cookie{Name: "user_auth", Value: userAuth})
 	req.AddCookie(&http.Cookie{Name: "user_pwd", Value: userPwd})
 	client := &http.Client{}
 	resp, err := client.Do(req)

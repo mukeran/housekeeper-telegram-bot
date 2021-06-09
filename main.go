@@ -8,11 +8,12 @@ import (
 	"HouseKeeperBot/modules/global"
 	"HouseKeeperBot/schedule"
 	"fmt"
-	"github.com/imdario/mergo"
-	tgbotapi "github.com/mukeran/telegram-bot-api"
 	"log"
 	"os"
 	"time"
+
+	"github.com/imdario/mergo"
+	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
 
 var (
@@ -33,7 +34,7 @@ func main() {
 		log.Panic(err)
 	}
 	//bot.Debug = true
-	if file, err := os.OpenFile(fmt.Sprintf("log_%v.log", time.Now().Format(time.RFC3339)),
+	if file, err := os.OpenFile(fmt.Sprintf("logs/log_%v.log", time.Now().Format(time.RFC3339)),
 		os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666); err == nil {
 		defer file.Close()
 		log.SetOutput(file)
