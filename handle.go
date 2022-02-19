@@ -1,8 +1,8 @@
 package main
 
 import (
-	"HouseKeeperBot/cache"
-	. "HouseKeeperBot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/cache"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
 	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
 

@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"HouseKeeperBot/cache"
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	"HouseKeeperBot/modules/cccat/methods"
-	"HouseKeeperBot/modules/cccat/models"
 	"fmt"
+	"github.com/mukeran/housekeeper-telegram-bot/cache"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/methods"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/models"
 	"log"
 
 	"github.com/jinzhu/gorm"
@@ -38,7 +38,7 @@ type paramManageUpdating struct {
 	AccountID uint
 }
 
-func generateListMainMenu(chatID int64, fromID int) (resp tgbotapi.MessageConfig) {
+func generateListMainMenu(chatID int64, fromID int64) (resp tgbotapi.MessageConfig) {
 	resp = tgbotapi.NewMessage(chatID, "Please select an account to manage:")
 	buttons := generateAccountListInlineKeyboardButtons(fromID, CallbackCccatList)
 	if buttons == nil {
@@ -49,7 +49,7 @@ func generateListMainMenu(chatID int64, fromID int) (resp tgbotapi.MessageConfig
 	return
 }
 
-func generateEditList(chatID int64, messageID int, fromID int) (resp tgbotapi.EditMessageTextConfig) {
+func generateEditList(chatID int64, messageID int, fromID int64) (resp tgbotapi.EditMessageTextConfig) {
 	resp = tgbotapi.NewEditMessageText(chatID, messageID, "Please select an account to manage:")
 	buttons := generateAccountListInlineKeyboardButtons(fromID, CallbackCccatList)
 	if buttons == nil {
@@ -159,7 +159,7 @@ func OnManageToggleAutoSignButtonClick() CallbackQueryHandlerFunc {
 		defer tx.RollbackUnlessCommitted()
 		DatabasePanicError(tx.Save(account))
 		DatabasePanicError(tx.Commit())
-		MustAnswerCallbackQuery(bot, tgbotapi.NewCallback(callbackQueryID,
+		MustSend(bot, tgbotapi.NewCallback(callbackQueryID,
 			fmt.Sprintf("Successfully set account %v's auto sign to %v", account.ID, func() string {
 				if account.AutoSign {
 					return "on"

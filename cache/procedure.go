@@ -11,11 +11,11 @@ const (
 	fieldParam          = "param"
 )
 
-func getProcedureID(chatID int64, userID int) string {
+func getProcedureID(chatID int64, userID int64) string {
 	return fmt.Sprintf("%v%v", chatID, userID)
 }
 
-func RecordProcedure(chatID int64, userID int, procedureHandler string, param string) {
+func RecordProcedure(chatID int64, userID int64, procedureHandler string, param string) {
 	conn := Redis.Get()
 	defer conn.Close()
 	_, err := conn.Do("HMSET", getProcedureID(chatID, userID),
@@ -26,7 +26,7 @@ func RecordProcedure(chatID int64, userID int, procedureHandler string, param st
 	}
 }
 
-func ResumeProcedure(chatID int64, userID int) (procedureHandler string, param string) {
+func ResumeProcedure(chatID int64, userID int64) (procedureHandler string, param string) {
 	conn := Redis.Get()
 	defer conn.Close()
 	values, err := redis.Values(conn.Do("HMGET", getProcedureID(chatID, userID),
@@ -40,7 +40,7 @@ func ResumeProcedure(chatID int64, userID int) (procedureHandler string, param s
 	return
 }
 
-func ClearProcedure(chatID int64, userID int) {
+func ClearProcedure(chatID int64, userID int64) {
 	conn := Redis.Get()
 	defer conn.Close()
 	_, err := conn.Do("DEL", getProcedureID(chatID, userID))

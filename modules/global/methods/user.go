@@ -1,12 +1,12 @@
 package methods
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	"HouseKeeperBot/modules/global/models"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/global/models"
 )
 
-func GetUserByTelegramUserID(telegramUserID int) *models.User {
+func GetUserByTelegramUserID(telegramUserID int64) *models.User {
 	tx := database.Db.Begin()
 	defer tx.RollbackUnlessCommitted()
 	var user models.User
@@ -15,7 +15,7 @@ func GetUserByTelegramUserID(telegramUserID int) *models.User {
 	return &user
 }
 
-func IsAdmin(telegramUserID int) bool {
+func IsAdmin(telegramUserID int64) bool {
 	tx := database.Db
 	var count uint
 	DatabasePanicError(tx.Table(models.TableUser).
@@ -23,7 +23,7 @@ func IsAdmin(telegramUserID int) bool {
 	return count != 0
 }
 
-func SetAdmin(telegramUserID int, isAdmin bool) {
+func SetAdmin(telegramUserID int64, isAdmin bool) {
 	user := GetUserByTelegramUserID(telegramUserID)
 	tx := database.Db.Begin()
 	defer tx.RollbackUnlessCommitted()
@@ -32,15 +32,15 @@ func SetAdmin(telegramUserID int, isAdmin bool) {
 	DatabasePanicError(tx.Commit())
 }
 
-func AddAdmin(telegramUserID int) {
+func AddAdmin(telegramUserID int64) {
 	SetAdmin(telegramUserID, true)
 }
 
-func DeleteAdmin(telegramUserID int) {
+func DeleteAdmin(telegramUserID int64) {
 	SetAdmin(telegramUserID, false)
 }
 
-func IsWhitelisted(telegramUserID int) bool {
+func IsWhitelisted(telegramUserID int64) bool {
 	var count uint
 	tx := database.Db
 	DatabasePanicError(tx.Table(models.TableUser).
@@ -48,7 +48,7 @@ func IsWhitelisted(telegramUserID int) bool {
 	return count != 0
 }
 
-func IsBlacklisted(telegramUserID int) bool {
+func IsBlacklisted(telegramUserID int64) bool {
 	var count uint
 	tx := database.Db
 	DatabasePanicError(tx.Table(models.TableUser).

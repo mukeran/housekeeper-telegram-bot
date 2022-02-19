@@ -1,10 +1,10 @@
 package methods
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	"HouseKeeperBot/modules/cccat/models"
 	"github.com/jinzhu/gorm"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/models"
 	"log"
 )
 

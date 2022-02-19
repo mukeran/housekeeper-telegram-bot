@@ -1,11 +1,16 @@
+# Editor files
 .idea
 
-/build/
+# Temporary files
 /db.sqlite3
-
 logs
-
 *.log
 
-HouseKeeperBot
+# Executable files
+housekeeper-telegram-bot
+housekeeper_telegram_bot
+housekeeper-telegram-bot.exe
+housekeeper_telegram_bot.exe
+
+# Custom scripts
 start.sh

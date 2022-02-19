@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/modules/cccat/methods"
 	"fmt"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/methods"
 	"github.com/mukeran/telegram-bot-api"
 )
 
@@ -26,7 +26,7 @@ func Del() CommandHandlerFunc {
 	}
 }
 
-func generateEditDelList(chatID int64, messageID int, fromID int) (resp tgbotapi.EditMessageTextConfig) {
+func generateEditDelList(chatID int64, messageID int, fromID int64) (resp tgbotapi.EditMessageTextConfig) {
 	resp = tgbotapi.NewEditMessageText(chatID, messageID, "Please select an account to delete:")
 	buttons := generateAccountListInlineKeyboardButtons(fromID, CallbackCccatDel)
 	if buttons == nil {

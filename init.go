@@ -1,11 +1,11 @@
 package main
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	cccatModels "HouseKeeperBot/modules/cccat/models"
-	"HouseKeeperBot/modules/global/methods"
-	globalModels "HouseKeeperBot/modules/global/models"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	cccatModels "github.com/mukeran/housekeeper-telegram-bot/modules/cccat/models"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/global/methods"
+	globalModels "github.com/mukeran/housekeeper-telegram-bot/modules/global/models"
 )
 
 func initializeDatabase() {

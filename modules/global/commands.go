@@ -1,8 +1,8 @@
 package global
 
 import (
-	. "HouseKeeperBot/common"
-	. "HouseKeeperBot/modules/global/handlers"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	. "github.com/mukeran/housekeeper-telegram-bot/modules/global/handlers"
 )
 
 func Commands() CommandHandlerMap {

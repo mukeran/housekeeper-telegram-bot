@@ -1,8 +1,8 @@
 package cccat
 
 import (
-	. "HouseKeeperBot/common"
-	. "HouseKeeperBot/modules/cccat/handlers"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	. "github.com/mukeran/housekeeper-telegram-bot/modules/cccat/handlers"
 )
 
 func CallbackQueries() CallbackQueryHandlerMap {

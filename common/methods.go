@@ -85,23 +85,23 @@ func MustSend(bot *tgbotapi.BotAPI, chattable tgbotapi.Chattable) {
 	}
 }
 
-func QuickSendTextMessage(bot *tgbotapi.BotAPI, chatID int64, text string) {
-	MustSend(bot, tgbotapi.NewMessage(chatID, text))
-}
-
-func MustAnswerCallbackQuery(bot *tgbotapi.BotAPI, config tgbotapi.CallbackConfig) {
-	_, err := bot.AnswerCallbackQuery(config)
+func MustRequest(bot *tgbotapi.BotAPI, chattable tgbotapi.Chattable) {
+	_, err := bot.Request(chattable)
 	if err != nil {
 		log.Panic(err)
 	}
 }
 
+func QuickSendTextMessage(bot *tgbotapi.BotAPI, chatID int64, text string) {
+	MustSend(bot, tgbotapi.NewMessage(chatID, text))
+}
+
 func QuickAnswerCallbackQuery(bot *tgbotapi.BotAPI, callbackQueryID string, text string) {
-	MustAnswerCallbackQuery(bot, tgbotapi.NewCallback(callbackQueryID, text))
+	MustRequest(bot, tgbotapi.NewCallback(callbackQueryID, text))
 }
 
 func QuickAnswerCallbackQueryWithAlert(bot *tgbotapi.BotAPI, callbackQueryID string, text string) {
-	MustAnswerCallbackQuery(bot, tgbotapi.NewCallbackWithAlert(callbackQueryID, text))
+	MustRequest(bot, tgbotapi.NewCallbackWithAlert(callbackQueryID, text))
 }
 
 func EncodeParam(param interface{}) string {

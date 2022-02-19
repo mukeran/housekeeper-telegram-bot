@@ -1,12 +1,12 @@
 package cccat
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	"HouseKeeperBot/modules/cccat/methods"
-	"HouseKeeperBot/modules/cccat/models"
-	"HouseKeeperBot/schedule"
 	"fmt"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/methods"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/models"
+	"github.com/mukeran/housekeeper-telegram-bot/schedule"
 	"log"
 	"time"
 

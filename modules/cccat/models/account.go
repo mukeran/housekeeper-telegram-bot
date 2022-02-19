@@ -19,7 +19,7 @@ type Account struct {
 	Email               string
 	Password            string
 	AutoSign            bool
-	CreatedBy           int
+	CreatedBy           int64
 	ResultChatID        int64
 }
 

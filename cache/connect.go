@@ -13,7 +13,7 @@ var (
 func Connect() {
 	Redis = &redis.Pool{
 		Dial: func() (conn redis.Conn, err error) {
-			redisAddress := os.Getenv("redis_address")
+			redisAddress := os.Getenv("REDIS_ADDR")
 			if redisAddress == "" {
 				redisAddress = "127.0.0.1:6379"
 			}

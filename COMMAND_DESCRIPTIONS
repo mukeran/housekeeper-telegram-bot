@@ -1,7 +1,0 @@
-cccat_add - Add a CCCAT account
-cccat_del - Delete a CCCAT account
-cccat_update - Update Cookie user_auth of a CCCAT account
-cccat_list - List all of your CCCAT account
-cccat_sign - Start a CCCAT sign procedure
-start - Obtain bot's main menu
-help - Help information for HouseKeeperBot

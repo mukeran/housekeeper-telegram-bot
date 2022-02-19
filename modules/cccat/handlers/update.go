@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"HouseKeeperBot/cache"
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
 	"fmt"
+	"github.com/mukeran/housekeeper-telegram-bot/cache"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
 
 	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
@@ -33,7 +33,7 @@ func Update() CommandHandlerFunc {
 	}
 }
 
-func generateEditUpdateList(chatID int64, messageID int, fromID int) (resp tgbotapi.EditMessageTextConfig) {
+func generateEditUpdateList(chatID int64, messageID int, fromID int64) (resp tgbotapi.EditMessageTextConfig) {
 	resp = tgbotapi.NewEditMessageText(chatID, messageID, "Please select an account to update Cookie user_auth:")
 	buttons := generateAccountListInlineKeyboardButtons(fromID, CallbackCccatUpdate)
 	if buttons == nil {

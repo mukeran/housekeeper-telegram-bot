@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"HouseKeeperBot/cache"
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	"HouseKeeperBot/modules/global/methods"
-	"HouseKeeperBot/modules/global/models"
 	"fmt"
+	"github.com/mukeran/housekeeper-telegram-bot/cache"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/global/methods"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/global/models"
 	"github.com/mukeran/telegram-bot-api"
 	"strconv"
 )
@@ -17,7 +17,7 @@ const (
 )
 
 type paramIntID struct {
-	ID int `json:"id"`
+	ID int64 `json:"id"`
 }
 
 func generateManageMenuKeyboard() (keyboard tgbotapi.InlineKeyboardMarkup) {
@@ -79,7 +79,7 @@ func generateManageAdminListKeyboard() (keyboard tgbotapi.InlineKeyboardMarkup) 
 	))
 	for _, admin := range admins {
 		buttons = append(buttons, tgbotapi.NewInlineKeyboardRow(
-			tgbotapi.NewInlineKeyboardButtonURL(strconv.Itoa(admin.TelegramUserID),
+			tgbotapi.NewInlineKeyboardButtonURL(strconv.FormatInt(admin.TelegramUserID, 10),
 				fmt.Sprintf("tg://user?id=%v", admin.TelegramUserID)),
 			tgbotapi.NewInlineKeyboardButtonData("<- Delete <-",
 				cache.RecordCallback(CallbackManageDeleteAdmin, EncodeParam(paramIntID{ID: admin.TelegramUserID}))),
@@ -94,13 +94,13 @@ func generateManageAdminListKeyboard() (keyboard tgbotapi.InlineKeyboardMarkup) 
 }
 
 func generateManageMenu(chatID int64) (resp tgbotapi.MessageConfig) {
-	resp = tgbotapi.NewMessage(chatID, "Welcome to HouseKeeperBot manage menu")
+	resp = tgbotapi.NewMessage(chatID, "Welcome to HouseKeeper Telegram Bot manage menu")
 	resp.ReplyMarkup = generateManageMenuKeyboard()
 	return
 }
 
 func generateEditManageMenu(chatID int64, messageID int) (resp tgbotapi.EditMessageTextConfig) {
-	resp = tgbotapi.NewEditMessageText(chatID, messageID, "Welcome to HouseKeeperBot manage menu")
+	resp = tgbotapi.NewEditMessageText(chatID, messageID, "Welcome to HouseKeeper Telegram Bot manage menu")
 	keyboard := generateManageMenuKeyboard()
 	resp.ReplyMarkup = &keyboard
 	return
@@ -185,7 +185,7 @@ func OnManageToggleWhitelistModeButtonClick() CallbackQueryHandlerFunc {
 			whitelistMode = "on"
 		}
 		methods.SetConfig(models.ConfigWhitelistMode, whitelistMode)
-		MustAnswerCallbackQuery(bot, tgbotapi.NewCallback(callbackQueryID,
+		MustRequest(bot, tgbotapi.NewCallback(callbackQueryID,
 			fmt.Sprintf(tplSuccessfullyToggleWhitelistMode, whitelistMode)))
 		MustSend(bot, generateEditManageAuthMenu(lastMsg.Chat.ID, lastMsg.MessageID))
 	}
@@ -204,7 +204,7 @@ func OnManageWhitelistButtonClick() CallbackQueryHandlerFunc {
 	}
 }
 
-func generateToggleIsWhitelistedKeyboard(telegramUserID int) (keyboard tgbotapi.InlineKeyboardMarkup) {
+func generateToggleIsWhitelistedKeyboard(telegramUserID int64) (keyboard tgbotapi.InlineKeyboardMarkup) {
 	keyboard = tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Toggle status",
@@ -215,7 +215,7 @@ func generateToggleIsWhitelistedKeyboard(telegramUserID int) (keyboard tgbotapi.
 	return
 }
 
-func generateToggleIsWhitelisted(chatID int64, telegramUserID int) (resp tgbotapi.MessageConfig) {
+func generateToggleIsWhitelisted(chatID int64, telegramUserID int64) (resp tgbotapi.MessageConfig) {
 	resp = tgbotapi.NewMessage(chatID, fmt.Sprintf("User %v is %v the whitelist", telegramUserID,
 		func() string {
 			if methods.IsWhitelisted(telegramUserID) {
@@ -230,7 +230,7 @@ func generateToggleIsWhitelisted(chatID int64, telegramUserID int) (resp tgbotap
 }
 
 func generateEditToggleIsWhitelisted(chatID int64, messageID int,
-	telegramUserID int) (resp tgbotapi.EditMessageTextConfig) {
+	telegramUserID int64) (resp tgbotapi.EditMessageTextConfig) {
 	resp = tgbotapi.NewEditMessageText(chatID, messageID, fmt.Sprintf("User %v is %v the whitelist", telegramUserID,
 		func() string {
 			if methods.IsWhitelisted(telegramUserID) {
@@ -300,7 +300,7 @@ func OnManageBlacklistButtonClick() CallbackQueryHandlerFunc {
 	}
 }
 
-func generateToggleIsBlacklistedKeyboard(telegramUserID int) (keyboard tgbotapi.InlineKeyboardMarkup) {
+func generateToggleIsBlacklistedKeyboard(telegramUserID int64) (keyboard tgbotapi.InlineKeyboardMarkup) {
 	keyboard = tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
 			tgbotapi.NewInlineKeyboardButtonData("Toggle status",
@@ -311,7 +311,7 @@ func generateToggleIsBlacklistedKeyboard(telegramUserID int) (keyboard tgbotapi.
 	return
 }
 
-func generateToggleIsBlacklisted(chatID int64, telegramUserID int) (resp tgbotapi.MessageConfig) {
+func generateToggleIsBlacklisted(chatID int64, telegramUserID int64) (resp tgbotapi.MessageConfig) {
 	resp = tgbotapi.NewMessage(chatID, fmt.Sprintf("User %v is %v the blacklist", telegramUserID,
 		func() string {
 			if methods.IsBlacklisted(telegramUserID) {
@@ -326,7 +326,7 @@ func generateToggleIsBlacklisted(chatID int64, telegramUserID int) (resp tgbotap
 }
 
 func generateEditToggleIsBlacklisted(chatID int64, messageID int,
-	telegramUserID int) (resp tgbotapi.EditMessageTextConfig) {
+	telegramUserID int64) (resp tgbotapi.EditMessageTextConfig) {
 	resp = tgbotapi.NewEditMessageText(chatID, messageID,
 		fmt.Sprintf("User %v is %v the blacklist", telegramUserID, func() string {
 			if methods.IsBlacklisted(telegramUserID) {
@@ -427,7 +427,7 @@ func OnManageAddAdminButtonClick() CallbackQueryHandlerFunc {
 	}
 }
 
-func generateRevertAddAdmin(chatID int64, telegramUserID int) (resp tgbotapi.MessageConfig) {
+func generateRevertAddAdmin(chatID int64, telegramUserID int64) (resp tgbotapi.MessageConfig) {
 	resp = tgbotapi.NewMessage(chatID, fmt.Sprintf("Successfully set user %v as admin", telegramUserID))
 	resp.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(

@@ -10,7 +10,7 @@ type User struct {
 	ID             uint
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
-	TelegramUserID int
+	TelegramUserID int64
 	IsAdmin        bool
 	IsWhitelisted  bool
 	IsBlacklisted  bool

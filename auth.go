@@ -1,13 +1,13 @@
 package main
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/modules/global/methods"
-	globalModels "HouseKeeperBot/modules/global/models"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/global/methods"
+	globalModels "github.com/mukeran/housekeeper-telegram-bot/modules/global/models"
 	tgbotapi "github.com/mukeran/telegram-bot-api"
 )
 
-func auth(bot *tgbotapi.BotAPI, chatID int64, telegramUserID int) bool {
+func auth(bot *tgbotapi.BotAPI, chatID int64, telegramUserID int64) bool {
 	if methods.IsBlacklisted(telegramUserID) {
 		return false
 	}

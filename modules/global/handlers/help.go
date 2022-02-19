@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/modules/global/methods"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/global/methods"
 	"github.com/mukeran/telegram-bot-api"
 )
 
 const (
-	tplHelp = `HouseKeeperBot Help
+	tplHelp = `HouseKeeper Telegram Bot Help
 Global:
 /start \- Obtain bot's main menu \(not functional yet\)
 /help \- This help information

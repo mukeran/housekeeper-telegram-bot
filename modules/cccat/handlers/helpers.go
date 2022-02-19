@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"HouseKeeperBot/cache"
-	. "HouseKeeperBot/common"
-	"HouseKeeperBot/database"
-	"HouseKeeperBot/modules/cccat/methods"
-	"HouseKeeperBot/modules/cccat/models"
 	"errors"
 	"fmt"
+	"github.com/mukeran/housekeeper-telegram-bot/cache"
+	. "github.com/mukeran/housekeeper-telegram-bot/common"
+	"github.com/mukeran/housekeeper-telegram-bot/database"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/methods"
+	"github.com/mukeran/housekeeper-telegram-bot/modules/cccat/models"
 	"log"
 	"time"
 
@@ -19,7 +19,7 @@ var (
 	errPermissionDenied = errors.New("permission denied")
 )
 
-func generateAccountListInlineKeyboardButtons(fromID int, callback string) (buttons [][]tgbotapi.InlineKeyboardButton) {
+func generateAccountListInlineKeyboardButtons(fromID int64, callback string) (buttons [][]tgbotapi.InlineKeyboardButton) {
 	var accounts []models.Account
 	tx := database.Db
 	if v := tx.Where("created_by = ?", fromID).
@@ -39,7 +39,7 @@ func generateAccountListInlineKeyboardButtons(fromID int, callback string) (butt
 	return
 }
 
-func getAccountByIDWithSecurityCheck(accountID uint, fromID int) (*models.Account, error) {
+func getAccountByIDWithSecurityCheck(accountID uint, fromID int64) (*models.Account, error) {
 	account := methods.GetAccountByID(accountID)
 	if account == nil {
 		return nil, errAccountNotFound
